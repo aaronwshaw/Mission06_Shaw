@@ -1,25 +1,25 @@
 ﻿@model Movie
 
-
 <h1>Add a New Movie</h1>
-<form>
-    <label for="Title">Title: </label>
+
+<form method="post">
+    <label asp-for="Title">Title: </label>
     <input asp-for="Title"/>
 
     <br />
-    <label for="Category">Category: </label>
+    <label asp-for="Category">Category: </label>
     <input asp-for="Category"/>
 
     <br />
-    <label for="Year">Year: </label>
+    <label asp-for="Year">Year: </label>
     <input asp-for="Year" />
 
     <br/>
-    <label for="Director">Director: </label>
+    <label asp-for="Director">Director: </label>
     <input asp-for="Director" />
 
     <br />
-    <label for="Rating">Rating: </label>
+    <label asp-for="Rating">Rating: </label>
     <select asp-for="Rating">
         <option value="G">G</option>
         <option value="PG">PG</option>
@@ -28,15 +28,15 @@
     </select>
 
     <br />
-    <label for="Edited">Edited: </label>
+    <label asp-for="Edited">Edited: </label>
     <input asp-for="Edited" />
 
     <br />
-    <label for="LentTo">Lent to: </label>
+    <label asp-for="LentTo">Lent to: </label>
     <input asp-for="LentTo" />
 
     <br />
-    <label for="Notes">Notes: </label>
+    <label asp-for="Notes">Notes: </label>
     <input asp-for="Notes" />
     <br />
 
