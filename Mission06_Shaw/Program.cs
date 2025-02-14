@@ -1,7 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using Mission06_Shaw.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//Configure connection to database
+builder.Services.AddDbContext<MovieSubmissionContext>(options =>
+{
+    options.UseSqlite(builder.Configuration["ConnectionStrings:MovieConnection"]);
+});
 
 var app = builder.Build();
 
