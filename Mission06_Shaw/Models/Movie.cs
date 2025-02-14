@@ -2,6 +2,7 @@
 
 namespace Mission06_Shaw.Models
 {
+    //form for a movie submission to be sent to the database
     public class Movie
     {
         [Key]
