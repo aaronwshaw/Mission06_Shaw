@@ -6,6 +6,14 @@ namespace Mission06_Shaw.Controllers
 {
     public class HomeController : Controller
     {
+        private MovieSubmissionContext _context;
+
+        public HomeController(MovieSubmissionContext temp)//Constructor
+        { 
+            _context = temp;
+        }
+
+
         //This displays the home page
         public IActionResult Index()
         {
@@ -29,6 +37,9 @@ namespace Mission06_Shaw.Controllers
         [HttpPost]
         public IActionResult EnterMovies(Movie response)
         {
+            _context.Movies.Add(response);//Add record to the database
+            _context.SaveChanges();
+
             return(View("Confirmation", response));
 
         }
