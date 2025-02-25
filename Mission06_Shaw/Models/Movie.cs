@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mission06_Shaw.Models
 {
-    //form for a movie submission to be sent to the database
+    // This makes a Movie class with all the data we need when someone enters in a new movie
     public class Movie
     {
         [Key]

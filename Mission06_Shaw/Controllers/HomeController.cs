@@ -1,114 +1,114 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Mission06_Shaw.Models;
 
-namespace Mission06_Shaw.Controllers
+namespace Mission06_Shaw.Controllers;
+
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+
+    private EnterMovie.EnterMovieContext _context;
+
+    public HomeController(EnterMovie.EnterMovieContext temp) // constructor
     {
+        _context = temp;
+    }
 
-        private EnterMovie.EnterMovieContext _context;
+    // Actions for the different page views
+    public IActionResult Index()
+    {
+        return View();
+    }
 
-        public HomeController(EnterMovie.EnterMovieContext temp) // constructor
+    public IActionResult GettoKnow()
+    {
+        return View();
+    }
+
+    // HTTP get for adding a new movie
+    [HttpGet]
+    public IActionResult EnterMovie()
+    {
+        ViewBag.Categories = _context.Categories.
+            OrderBy(x => x.CategoryName)
+            .ToList();
+
+        return View("EnterMovie", new Movie());
+    }
+
+
+    // HTTP post for adding a new movie - redirects to confirmation
+    [HttpPost]
+    public IActionResult EnterMovie(Movie response)
+    {
+        if (ModelState.IsValid)
         {
-            _context = temp;
-        }
+            _context.Movies.Add(response);
+            _context.SaveChanges();
 
-        // Actions for the different page views
-        public IActionResult Index()
-        {
-            return View();
+            return View("Confirmation", response);
         }
-
-        public IActionResult GettoKnow()
-        {
-            return View();
-        }
-
-        // HTTP get for adding a new movie
-        [HttpGet]
-        public IActionResult EnterMovie()
+        else
         {
             ViewBag.Categories = _context.Categories.
                 OrderBy(x => x.CategoryName)
                 .ToList();
-
-            return View("EnterMovie", new Movie());
+            return View("EnterMovie", response);
         }
-
-
-        // HTTP post for adding a new movie - redirects to confirmation
-        [HttpPost]
-        public IActionResult EnterMovie(Movie response)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Movies.Add(response);
-                _context.SaveChanges();
-
-                return View("Confirmation", response);
-            }
-            else
-            {
-                ViewBag.Categories = _context.Categories.
-                    OrderBy(x => x.CategoryName)
-                    .ToList();
-                return View("EnterMovie", response);
-            }
-
-        }
-
-        //View for the whole movie collection
-        public IActionResult MovieCollection()
-        {
-            var movies = _context.Movies
-                .Include(x => x.Category)
-                .OrderBy(x => x.Title).ToList();
-            return View(movies);
-        }
-
-        [HttpGet]
-        public IActionResult Edit(int movieID)
-        {
-            var movie = _context.Movies
-                .Single(x => x.MovieId == movieID);
-
-            ViewBag.Categories = _context.Categories.
-                OrderBy(x => x.CategoryName)
-                .ToList();
-
-            return View("EnterMovie", movie);
-
-        }
-
-        [HttpPost]
-        public IActionResult Edit(Movie updatedMovie)
-        {
-            _context.Movies.Update(updatedMovie);
-            _context.SaveChanges();
-
-            return RedirectToAction("MovieCollection");
-        }
-
-
-        [HttpGet]
-        public IActionResult DeleteMovie(int movieID)
-        {
-            var recordToDelete = _context.Movies
-                .Single(x => x.MovieId == movieID);
-
-            return View("Delete", recordToDelete);
-        }
-
-        [HttpPost]
-        public IActionResult Delete(Movie recordToDelete)
-        {
-            _context.Movies.Remove(recordToDelete);
-            _context.SaveChanges();
-
-            return RedirectToAction("MovieCollection");
-        }
-
 
     }
+
+    //View for the whole movie collection
+    public IActionResult MovieCollection()
+    {
+        var movies = _context.Movies
+            .Include(x => x.Category)
+            .OrderBy(x => x.Title).ToList();
+        return View(movies);
+    }
+
+    [HttpGet]
+    public IActionResult Edit(int movieID)
+    {
+        var movie = _context.Movies
+            .Single(x => x.MovieId == movieID);
+
+        ViewBag.Categories = _context.Categories.
+            OrderBy(x => x.CategoryName)
+            .ToList();
+
+        return View("EnterMovie", movie);
+
+    }
+
+    [HttpPost]
+    public IActionResult Edit(Movie updatedMovie)
+    {
+        _context.Movies.Update(updatedMovie);
+        _context.SaveChanges();
+
+        return RedirectToAction("MovieCollection");
+    }
+
+
+    [HttpGet]
+    public IActionResult DeleteMovie(int movieID)
+    {
+        var recordToDelete = _context.Movies
+            .Single(x => x.MovieId == movieID);
+
+        return View("Delete", recordToDelete);
+    }
+
+    [HttpPost]
+    public IActionResult Delete(Movie recordToDelete)
+    {
+        _context.Movies.Remove(recordToDelete);
+        _context.SaveChanges();
+
+        return RedirectToAction("MovieCollection");
+    }
+
+
 }
