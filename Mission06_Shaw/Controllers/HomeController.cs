@@ -6,42 +6,109 @@ namespace Mission06_Shaw.Controllers
 {
     public class HomeController : Controller
     {
-        private MovieSubmissionContext _context;
 
-        public HomeController(MovieSubmissionContext temp)//Constructor
-        { 
+        private EnterMovie.EnterMovieContext _context;
+
+        public HomeController(EnterMovie.EnterMovieContext temp) // constructor
+        {
             _context = temp;
         }
 
-
-        //This displays the home page
+        // Actions for the different page views
         public IActionResult Index()
         {
             return View();
         }
 
-        //This displays the get to know Joel page
-        public IActionResult GetToKnow()
+        public IActionResult GettoKnow()
         {
             return View();
         }
 
-        //This displays the movie form
+        // HTTP get for adding a new movie
         [HttpGet]
-        public IActionResult EnterMovies()
+        public IActionResult EnterMovie()
         {
-            return View();
+            ViewBag.Categories = _context.Categories.
+                OrderBy(x => x.CategoryName)
+                .ToList();
+
+            return View("EnterMovie", new Movie());
         }
 
-        //This will show them the confirmation page after they submit the movie form
+
+        // HTTP post for adding a new movie - redirects to confirmation
         [HttpPost]
-        public IActionResult EnterMovies(Movie response)
+        public IActionResult EnterMovie(Movie response)
         {
-            _context.Movies.Add(response);//Add record to the database
+            if (ModelState.IsValid)
+            {
+                _context.Movies.Add(response);
+                _context.SaveChanges();
+
+                return View("Confirmation", response);
+            }
+            else
+            {
+                ViewBag.Categories = _context.Categories.
+                    OrderBy(x => x.CategoryName)
+                    .ToList();
+                return View("EnterMovie", response);
+            }
+
+        }
+
+        //View for the whole movie collection
+        public IActionResult MovieCollection()
+        {
+            var movies = _context.Movies
+                .Include(x => x.Category)
+                .OrderBy(x => x.Title).ToList();
+            return View(movies);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int movieID)
+        {
+            var movie = _context.Movies
+                .Single(x => x.MovieId == movieID);
+
+            ViewBag.Categories = _context.Categories.
+                OrderBy(x => x.CategoryName)
+                .ToList();
+
+            return View("EnterMovie", movie);
+
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Movie updatedMovie)
+        {
+            _context.Movies.Update(updatedMovie);
             _context.SaveChanges();
 
-            return(View("Confirmation", response));
-
+            return RedirectToAction("MovieCollection");
         }
+
+
+        [HttpGet]
+        public IActionResult DeleteMovie(int movieID)
+        {
+            var recordToDelete = _context.Movies
+                .Single(x => x.MovieId == movieID);
+
+            return View("Delete", recordToDelete);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Movie recordToDelete)
+        {
+            _context.Movies.Remove(recordToDelete);
+            _context.SaveChanges();
+
+            return RedirectToAction("MovieCollection");
+        }
+
+
     }
 }
