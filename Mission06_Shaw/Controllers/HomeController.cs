@@ -26,7 +26,7 @@ public class HomeController : Controller
         return View();
     }
 
-    // HTTP get for adding a new movie
+    // Takes you to the EnterMovie page
     [HttpGet]
     public IActionResult EnterMovie()
     {
@@ -38,7 +38,7 @@ public class HomeController : Controller
     }
 
 
-    // HTTP post for adding a new movie - redirects to confirmation
+    // Adds the new movie - redirects to confirmation
     [HttpPost]
     public IActionResult EnterMovie(Movie response)
     {
@@ -68,6 +68,7 @@ public class HomeController : Controller
         return View(movies);
     }
 
+    //Populates the enterMovie view with the data from the movie you want to edit
     [HttpGet]
     public IActionResult Edit(int movieID)
     {
@@ -82,6 +83,7 @@ public class HomeController : Controller
 
     }
 
+    //Submit the editted movie and redirects to movie collection
     [HttpPost]
     public IActionResult Edit(Movie updatedMovie)
     {
@@ -91,7 +93,7 @@ public class HomeController : Controller
         return RedirectToAction("MovieCollection");
     }
 
-
+    //Finds the movie you want to delete
     [HttpGet]
     public IActionResult DeleteMovie(int movieID)
     {
@@ -101,6 +103,7 @@ public class HomeController : Controller
         return View("Delete", recordToDelete);
     }
 
+    //Delete a movie
     [HttpPost]
     public IActionResult Delete(Movie recordToDelete)
     {

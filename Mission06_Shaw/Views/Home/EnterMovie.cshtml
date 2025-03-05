@@ -7,7 +7,7 @@
     <input type="hidden" asp-for="MovieId" />
 
     <select asp-for="CategoryId">
-        <option value="">Select a Category</option>
+        <option value=1>Select a Category</option>
         @foreach (Category m in ViewBag.Categories)
         {
             <option value="@m.CategoryId">@m.CategoryName</option>
@@ -38,7 +38,7 @@
     </select>
     <br />
     <label asp-for="CopiedToPlex">Copied to Plex?</label>
-    <select asp-for="Edited">
+    <select asp-for="CopiedToPlex">
         <option value="1">Yes</option>
         <option value="0">No</option>
     </select>
